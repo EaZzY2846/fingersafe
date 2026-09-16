@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FingerSafe 指紋防護水壺｜離開視線，安全不離線</title>
+  <meta name="description" content="FingerSafe將指紋辨識整合進水壺瓶蓋，限制未授權者開啟，為校園、辦公室與健身房等共享空間增加一道個人安全防線。">
+  <meta property="og:title" content="FingerSafe 指紋防護水壺｜離開視線，安全不離線">
+  <meta property="og:description" content="只有授權指紋才能解鎖瓶蓋，為你的日常飲水安全多上一道鎖。">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#030812">
+
+  <style>
+    /* =========================
+       Design tokens and reset
+    ========================== */
+    :root {
+      --color-navy: #071426;
+      --color-bg: #030812;
+      --color-surface: #0c1a2b;
+      --color-surface-soft: #102238;
+      --color-text: #f2f6fa;
+      --color-muted: #aab7c6;
+      --color-green: #25e879;
+      --color-green-dark: #071f18;
+      --color-red: #ff5a65;
+      --color-red-dark: #291117;
+      --color-border: rgba(170, 183, 198, 0.16);
+      --color-border-strong: rgba(170, 183, 198, 0.28);
+      --radius-sm: 0.75rem;
+      --radius-md: 1.25rem;
+      --radius-lg: 2rem;
+      --shadow-card: 0 18px 60px rgba(0, 0, 0, 0.22);
+      --shadow-green: 0 0 44px rgba(37, 232, 121, 0.17);
+      --container: 75rem;
+      --section-space: clamp(5rem, 10vw, 8.5rem);
+      --transition: 180ms ease;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 5.5rem;
+    }
+
+    body {
+      margin: 0;
+      min-width: 20rem;
+      overflow-x: hidden;
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at 80% 8%, rgba(37, 232, 121, 0.07), transparent 25rem),
+        var(--color-bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+        "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    section {
+      position: relative;
+      padding-block: var(--section-space);
+    }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--container));
+      margin-inline: auto;
+    }
+
+    .section-heading {
+      max-width: 45rem;
+      margin-bottom: clamp(2.25rem, 5vw, 4rem);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      color: var(--color-green);
+      font-size: 0.79rem;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 1.75rem;
+      height: 1px;
+      background: currentColor;
+      content: "";
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 1.25rem;
+      font-size: clamp(2.45rem, 11vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      margin-bottom: 0.65rem;
+      font-size: 1.15rem;
+      line-height: 1.4;
+    }
+
+    .lead {
+      max-width: 39rem;
+      color: var(--color-muted);
+      font-size: clamp(1.05rem, 2vw, 1.24rem);
+    }
+
+    .muted {
+      color: var(--color-muted);
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 1000;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.7rem 1rem;
+      color: var(--color-bg);
+      background: var(--color-green);
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    /* =========================
+       Buttons
+    ========================== */
+    .button {
+      display: inline-flex;
+      min-height: 3.25rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+      line-height: 1.2;
+      transition:
+        transform var(--transition),
+        background-color var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+    }
+
+    .button-primary {
+      color: #03130c;
+      background: var(--color-green);
+      box-shadow: 0 10px 28px rgba(37, 232, 121, 0.16);
+    }
+
+    .button-secondary {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.025);
+      border-color: var(--color-border-strong);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary:hover {
+      background: #45ef8d;
+      box-shadow: 0 14px 34px rgba(37, 232, 121, 0.24);
+    }
+
+    .button-secondary:hover {
+      border-color: rgba(37, 232, 121, 0.48);
+      background: rgba(37, 232, 121, 0.055);
+    }
+
+    .button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(37, 232, 121, 0.72);
+      outline-offset: 4px;
+    }
+
+    /* =========================
+       Header and navigation
+    ========================== */
+    .site-header {
+      position: sticky;
+      z-index: 100;
+      top: 0;
+      border-bottom: 1px solid var(--color-border);
+      background: rgba(3, 8, 18, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-wrap {
+      min-height: 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 1.08rem;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 1.75rem;
+      height: 1.75rem;
+      flex: 0 0 auto;
+      border: 2px solid var(--color-green);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(37, 232, 121, 0.25);
+    }
+
+    .brand-mark::before {
+      position: absolute;
+      inset: 0.38rem 0.48rem;
+      border: 2px solid var(--color-green);
+      border-top: 0;
+      border-bottom: 0;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.65rem 0.8rem;
+      color: var(--color-muted);
+      border-radius: 0.65rem;
+      font-size: 0.92rem;
+      font-weight: 650;
+      transition:
+        color var(--transition),
+        background-color var(--transition);
+    }
+
+    .nav-link:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 2.8rem;
+      height: 2.8rem;
+      padding: 0;
+      place-items: center;
+      color: var(--color-text);
+      background: transparent;
+      border: 1px solid var(--color-border-strong);
+      border-radius: 0.7rem;
+      cursor: pointer;
+    }
+
+    .menu-icon,
+    .menu-icon::before,
+    .menu-icon::after {
+      display: block;
+      width: 1.15rem;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: transform var(--transition);
+    }
+
+    .menu-icon {
+      position: relative;
+    }
+
+    .menu-icon::before,
+    .menu-icon::after {
+      position: absolute;
+      left: 0;
+      content: "";
+    }
+
+    .menu-icon::before {
+      top: -0.38rem;
+    }
+
+    .menu-icon::after {
+      top: 0.38rem;
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-icon {
+      background: transparent;
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-icon::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-icon::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+
+    /* =========================
+       Hero / Hook
+    ========================== */
+    .hero {
+      min-height: calc(100svh - 4.5rem);
+      display: grid;
+      align-items: center;
+      padding-top: clamp(3.5rem, 9vw, 7rem);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      position: absolute;
+      top: 8%;
+      right: -12rem;
+      width: 32rem;
+      height: 32rem;
+      background: radial-gradient(circle, rgba(37, 232, 121, 0.11), transparent 67%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .concept-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+      padding: 0.42rem 0.75rem;
+      color: var(--color-muted);
+      background: rgba(170, 183, 198, 0.06);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .concept-label::before {
+      width: 0.48rem;
+      height: 0.48rem;
+      background: var(--color-green);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(37, 232, 121, 0.65);
+      content: "";
+    }
+
+    .hero-copy .lead {
+      margin-bottom: 1.6rem;
+    }
+
+    .hero-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      margin-bottom: 1.55rem;
+    }
+
+    .hero-price {
+      font-size: clamp(1.9rem, 6vw, 2.8rem);
+      font-weight: 850;
+      letter-spacing: -0.04em;
+    }
+
+    .price-note {
+      color: var(--color-muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: clamp(24rem, 110vw, 37rem);
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .hero-visual::before {
+      position: absolute;
+      z-index: -2;
+      width: min(90vw, 31rem);
+      aspect-ratio: 1;
+      background:
+        radial-gradient(circle, rgba(37, 232, 121, 0.14), rgba(7, 20, 38, 0.04) 48%, transparent 70%);
+      border: 1px solid rgba(37, 232, 121, 0.08);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .hero-visual::after {
+      position: absolute;
+      z-index: -1;
+      bottom: 9%;
+      width: 64%;
+      height: 8%;
+      background: rgba(37, 232, 121, 0.13);
+      border-radius: 50%;
+      filter: blur(22px);
+      content: "";
+    }
+
+    .product-image {
+      width: min(100%, 27rem);
+      height: clamp(24rem, 105vw, 37rem);
+      object-fit: contain;
+      object-position: center;
+      filter: drop-shadow(0 2rem 2.2rem rgba(0, 0, 0, 0.42));
+    }
+
+    .sensor-glow {
+      position: absolute;
+      z-index: -1;
+      top: 18%;
+      left: 50%;
+      width: 5.5rem;
+      height: 5.5rem;
+      border: 1px solid rgba(37, 232, 121, 0.25);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 232, 121, 0.18), transparent 65%);
+      box-shadow: var(--shadow-green);
+      transform: translateX(-50%);
+      animation: breathe 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes breathe {
+      0%,
+      100% {
+        opacity: 0.52;
+        transform: translateX(-50%) scale(0.92);
+      }
+      50% {
+        opacity: 0.95;
+        transform: translateX(-50%) scale(1.08);
+      }
+    }
+
+    /* =========================
+       Solution
+    ========================== */
+    .solution {
+      background: linear-gradient(180deg, rgba(12, 26, 43, 0.48), rgba(7, 20, 38, 0.25));
+      border-block: 1px solid var(--color-border);
+    }
+
+    .steps-grid {
+      display: grid;
+      gap: 1rem;
+      counter-reset: steps;
+    }
+
+    .step-card,
+    .status-card,
+    .mechanism-card,
+    .boundary-panel,
+    .offer-card {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.032), transparent),
+        var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .step-card {
+      position: relative;
+      min-height: 15rem;
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      counter-increment: steps;
+    }
+
+    .step-card::after {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      color: rgba(242, 246, 250, 0.13);
+      content: "0" counter(steps);
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .icon-box {
+      width: 3.25rem;
+      height: 3.25rem;
+      display: grid;
+      place-items: center;
+      margin-bottom: 1.4rem;
+      color: var(--color-green);
+      background: rgba(37, 232, 121, 0.08);
+      border: 1px solid rgba(37, 232, 121, 0.18);
+      border-radius: 1rem;
+    }
+
+    .icon-box svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+
+    .step-card p,
+    .status-card p,
+    .mechanism-card p {
+      margin-bottom: 0;
+      color: var(--color-muted);
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .status-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.35rem;
+      border-radius: var(--radius-md);
+    }
+
+    .status-card.success {
+      border-color: rgba(37, 232, 121, 0.22);
+    }
+
+    .status-card.failure {
+      border-color: rgba(255, 90, 101, 0.22);
+    }
+
+    .status-light {
+      width: 2.85rem;
+      height: 2.85rem;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .status-light::after {
+      width: 0.72rem;
+      height: 0.72rem;
+      background: currentColor;
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 16px currentColor;
+    }
+
+    .success .status-light {
+      color: var(--color-green);
+      background: var(--color-green-dark);
+    }
+
+    .failure .status-light {
+      color: var(--color-red);
+      background: var(--color-red-dark);
+    }
+
+    /* =========================
+       Authority
+    ========================== */
+    .mechanism-grid {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .mechanism-card {
+      padding: 1.4rem;
+      border-radius: var(--radius-md);
+    }
+
+    .mechanism-card .mini-icon {
+      margin-bottom: 1rem;
+      color: var(--color-green);
+    }
+
+    .mechanism-card svg {
+      width: 1.65rem;
+      height: 1.65rem;
+    }
+
+    .boundary-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .boundary-panel {
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border-radius: var(--radius-md);
+    }
+
+    .boundary-panel.can {
+      border-color: rgba(37, 232, 121, 0.25);
+    }
+
+    .boundary-panel.cannot {
+      border-color: rgba(170, 183, 198, 0.22);
+    }
+
+    .boundary-title {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.35rem;
+    }
+
+    .boundary-title span {
+      width: 0.68rem;
+      height: 0.68rem;
+      flex: 0 0 auto;
+      border-radius: 50%;
+    }
+
+    .can .boundary-title span {
+      background: var(--color-green);
+      box-shadow: 0 0 13px rgba(37, 232, 121, 0.65);
+    }
+
+    .cannot .boundary-title span {
+      background: var(--color-muted);
+    }
+
+    .check-list {
+      display: grid;
+      gap: 0.85rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      position: relative;
+      padding-left: 1.65rem;
+      color: var(--color-muted);
+    }
+
+    .check-list li::before {
+      position: absolute;
+      top: 0.15rem;
+      left: 0;
+      color: var(--color-green);
+      content: "✓";
+      font-weight: 900;
+    }
+
+    .cannot .check-list li::before {
+      color: var(--color-muted);
+      content: "—";
+    }
+
+    /* =========================
+       Offer
+    ========================== */
+    .offer {
+      background:
+        radial-gradient(circle at 50% 45%, rgba(37, 232, 121, 0.07), transparent 26rem),
+        var(--color-navy);
+      border-block: 1px solid var(--color-border);
+    }
+
+    .offer .section-heading {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .offer-card {
+      max-width: 48rem;
+      margin-inline: auto;
+      padding: clamp(1.5rem, 5vw, 3.5rem);
+      border-color: rgba(37, 232, 121, 0.22);
+      border-radius: var(--radius-lg);
+    }
+
+    .offer-card-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .offer-card h3 {
+      margin-bottom: 0.3rem;
+      font-size: clamp(1.35rem, 4vw, 1.8rem);
+    }
+
+    .offer-price {
+      color: var(--color-green);
+      font-size: clamp(2rem, 7vw, 3rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .offer-list {
+      display: grid;
+      gap: 0.9rem;
+      margin: 1.8rem 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .offer-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      color: var(--color-muted);
+    }
+
+    .offer-list svg {
+      width: 1.3rem;
+      height: 1.3rem;
+      flex: 0 0 auto;
+      margin-top: 0.2rem;
+      color: var(--color-green);
+    }
+
+    .offer-card .button {
+      width: 100%;
+    }
+
+    .concept-note {
+      margin: 1rem 0 0;
+      color: var(--color-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    /* =========================
+       Final CTA and footer
+    ========================== */
+    .final-cta {
+      overflow: hidden;
+    }
+
+    .final-grid {
+      display: grid;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .final-copy h2 {
+      max-width: 16ch;
+    }
+
+    .slogan {
+      margin: 1.5rem 0 1.75rem;
+      padding-left: 1rem;
+      color: var(--color-text);
+      border-left: 2px solid var(--color-green);
+      font-size: 1.1rem;
+      font-weight: 750;
+    }
+
+    .final-price {
+      margin-bottom: 1.3rem;
+      color: var(--color-green);
+      font-size: 2.1rem;
+      font-weight: 900;
+    }
+
+    .final-product {
+      position: relative;
+      min-height: 28rem;
+      display: grid;
+      place-items: center;
+    }
+
+    .final-product::before {
+      position: absolute;
+      z-index: -1;
+      width: min(25rem, 86vw);
+      aspect-ratio: 1;
+      background: radial-gradient(circle, rgba(37, 232, 121, 0.13), transparent 68%);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .final-product img {
+      width: min(100%, 21rem);
+      height: 29rem;
+      object-fit: contain;
+      filter: drop-shadow(0 1.5rem 2rem rgba(0, 0, 0, 0.4));
+    }
+
+    .site-footer {
+      padding: 2rem 0 6.5rem;
+      color: var(--color-muted);
+      border-top: 1px solid var(--color-border);
+      font-size: 0.82rem;
+    }
+
+    .footer-inner {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .footer-inner p {
+      max-width: 58rem;
+      margin: 0;
+    }
+
+    /* =========================
+       Mobile fixed CTA
+    ========================== */
+    .mobile-cta {
+      position: fixed;
+      z-index: 90;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 0.7rem max(1rem, env(safe-area-inset-right))
+        calc(0.7rem + env(safe-area-inset-bottom))
+        max(1rem, env(safe-area-inset-left));
+      background: rgba(3, 8, 18, 0.92);
+      border-top: 1px solid var(--color-border);
+      backdrop-filter: blur(16px);
+    }
+
+    .mobile-cta-inner {
+      width: min(100%, 37rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-inline: auto;
+    }
+
+    .mobile-price {
+      line-height: 1.2;
+    }
+
+    .mobile-price small {
+      display: block;
+      color: var(--color-muted);
+      font-size: 0.67rem;
+    }
+
+    .mobile-price strong {
+      font-size: 1rem;
+    }
+
+    .mobile-cta .button {
+      min-height: 2.8rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.88rem;
+    }
+
+    /* =========================
+       Reveal animation
+    ========================== */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      transition:
+        opacity 650ms ease,
+        transform 650ms ease;
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================
+       Responsive layout
+    ========================== */
+    @media (min-width: 42rem) {
+      .container {
+        width: min(calc(100% - 3rem), var(--container));
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .status-grid,
+      .boundary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .mechanism-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-inner {
+        grid-template-columns: auto 1fr;
+        align-items: start;
+        justify-content: space-between;
+      }
+    }
+
+    @media (min-width: 56rem) {
+      .hero-grid,
+      .final-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
+      }
+
+      .hero-visual {
+        min-height: 39rem;
+      }
+
+      .product-image {
+        height: 39rem;
+      }
+
+      .mechanism-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .mobile-cta {
+        display: none;
+      }
+
+      .site-footer {
+        padding-bottom: 2rem;
+      }
+    }
+
+    @media (max-width: 55.99rem) {
+      .js .menu-toggle {
+        display: grid;
+      }
+
+      .js .site-nav {
+        position: fixed;
+        z-index: 99;
+        top: 4.5rem;
+        right: 0;
+        left: 0;
+        max-height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        background: rgba(3, 8, 18, 0.98);
+        border-bottom: 1px solid transparent;
+        transition:
+          max-height 260ms ease,
+          visibility 260ms ease,
+          border-color 260ms ease;
+      }
+
+      .js .site-nav.is-open {
+        max-height: 30rem;
+        visibility: visible;
+        border-color: var(--color-border);
+      }
+
+      .nav-list {
+        width: min(calc(100% - 2rem), var(--container));
+        display: grid;
+        gap: 0.25rem;
+        margin-inline: auto;
+        padding: 0.8rem 0 1.2rem;
+      }
+
+      .nav-link {
+        padding: 0.85rem 0.8rem;
+      }
+
+      .nav-cta {
+        margin-top: 0.35rem;
+        text-align: center;
+      }
+
+      .hero-copy {
+        max-width: 42rem;
+      }
+    }
+
+    @media (max-width: 30rem) {
+      .hero-actions {
+        display: grid;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .status-card {
+        display: grid;
+      }
+    }
+
+    /* =========================
+       Reduced motion
+    ========================== */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#hook" aria-label="FingerSafe 首頁">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>FingerSafe</span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-navigation"
+        aria-label="開啟導覽選單"
+      >
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="site-nav" id="site-navigation" aria-label="主要導覽">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#hook">產品概念</a></li>
+          <li><a class="nav-link" href="#solution">解鎖方式</a></li>
+          <li><a class="nav-link" href="#authority">保護機制</a></li>
+          <li><a class="nav-link" href="#offer">產品方案</a></li>
+          <li>
+            <a class="button button-primary nav-cta" href="#offer">
+              立即預購
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 1. Hook -->
+    <section class="hero" id="hook" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <span class="concept-label">產品概念展示</span>
+          <div class="eyebrow">FingerSafe 指紋防護水壺</div>
+
+          <h1 id="hero-title">你離開座位的30秒，水壺發生了什麼？</h1>
+
+          <p class="lead">
+            FingerSafe透過指紋辨識鎖定瓶蓋，讓未經授權的人，無法隨意打開你的水壺。
+          </p>
+
+          <div class="hero-price-row" aria-label="建議售價新台幣一千五百元">
+            <span class="hero-price">NT$1,500</span>
+            <span class="price-note">建議售價</span>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#offer">
+              立即預購FingerSafe
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="button button-secondary" href="#solution">
+              了解指紋解鎖方式
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <span class="sensor-glow" aria-hidden="true"></span>
+          <img
+            class="product-image"
+            src="fingerpoint.png"
+            alt="FingerSafe深藍色指紋防護水壺，黑色智慧瓶蓋上具有綠色指紋辨識燈環"
+            width="432"
+            height="720"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Solution -->
+    <section class="solution" id="solution" aria-labelledby="solution-title">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Solution</div>
+          <h2 id="solution-title">不是多一個麻煩，而是多一道鎖。</h2>
+          <p class="lead">
+            不用帶鑰匙、不用記密碼。保留熟悉的水壺使用方式，只在開啟前確認使用權限。
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-card reveal">
+            <div class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 11.5a4 4 0 0 1 8 0c0 5-2 7.5-4 9M6 11.5a6 6 0 0 1 12 0c0 2.8-.45 5.2-1.55 7.25M10 11.5a2 2 0 0 1 4 0c0 3.5-.9 5.8-2.65 7.4M4 11.5a8 8 0 0 1 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>錄入授權指紋</h3>
+            <p>先將可信任的使用者指紋登錄至智慧瓶蓋。</p>
+          </article>
+
+          <article class="step-card reveal">
+            <div class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="9" r="5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2.3-.8 4-2.5 5M12 4V2M17 5l1.5-1.5M7 5 5.5 3.5M9 21l1.3-5h3.4L15 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>觸碰感應區</h3>
+            <p>開啟前，以手指觸碰瓶蓋上方的圓形辨識區。</p>
+          </article>
+
+          <article class="step-card reveal">
+            <div class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10V7a4 4 0 1 1 8 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="5" y="10" width="14" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="m9 15 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>綠燈後解鎖</h3>
+            <p>辨識成功後綠色燈環亮起，即可正常開啟瓶蓋。</p>
+          </article>
+        </div>
+
+        <div class="status-grid" aria-label="指紋辨識結果">
+          <article class="status-card success reveal">
+            <span class="status-light" aria-hidden="true"></span>
+            <div>
+              <h3>授權指紋</h3>
+              <p>綠燈亮起，瓶蓋解鎖。</p>
+            </div>
+          </article>
+
+          <article class="status-card failure reveal">
+            <span class="status-light" aria-hidden="true"></span>
+            <div>
+              <h3>未授權指紋</h3>
+              <p>紅燈亮起，瓶蓋維持鎖定。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Authority -->
+    <section id="authority" aria-labelledby="authority-title">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Protection Mechanism</div>
+          <h2 id="authority-title">真正的安心，來自看得懂的保護機制。</h2>
+          <p class="lead">
+            FingerSafe不以模糊承諾製造安心，而是清楚說明它如何限制開啟，以及它不能取代哪些安全判斷。
+          </p>
+        </div>
+
+        <div class="mechanism-grid">
+          <article class="mechanism-card reveal">
+            <div class="mini-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="10" width="14" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>限制未授權開啟</h3>
+            <p>未通過指紋辨識時，瓶蓋維持鎖定狀態。</p>
+          </article>
+
+          <article class="mechanism-card reveal">
+            <div class="mini-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="8" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="16" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 12h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>清楚燈號回饋</h3>
+            <p>綠色代表授權成功，紅色代表辨識失敗。</p>
+          </article>
+
+          <article class="mechanism-card reveal">
+            <div class="mini-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 11a4 4 0 0 1 8 0c0 4.5-1.7 7.2-4 9M5.5 11a6.5 6.5 0 0 1 13 0M10 11a2 2 0 0 1 4 0c0 2.4-.45 4.25-1.4 5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>不需鑰匙密碼</h3>
+            <p>以指紋完成身分確認，降低額外攜帶與記憶負擔。</p>
+          </article>
+
+          <article class="mechanism-card reveal">
+            <div class="mini-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3 4.5 6v5.2c0 4.6 3.1 8.1 7.5 9.8 4.4-1.7 7.5-5.2 7.5-9.8V6L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M9 12.2 11 14l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>額外一道防護</h3>
+            <p>增加個人物品的權限控制，但不宣稱能排除所有風險。</p>
+          </article>
+        </div>
+
+        <div class="boundary-grid">
+          <article class="boundary-panel can reveal">
+            <div class="boundary-title">
+              <span aria-hidden="true"></span>
+              <h3>產品能做什麼</h3>
+            </div>
+            <ul class="check-list">
+              <li>限制未授權者開啟瓶蓋</li>
+              <li>降低誤拿與擅自飲用的可能</li>
+              <li>提供清楚的指紋辨識結果</li>
+            </ul>
+          </article>
+
+          <article class="boundary-panel cannot reveal">
+            <div class="boundary-title">
+              <span aria-hidden="true"></span>
+              <h3>產品不能取代什麼</h3>
+            </div>
+            <ul class="check-list">
+              <li>個人環境警覺</li>
+              <li>基本飲水安全判斷</li>
+              <li>對所有風險的絕對防護</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Offer -->
+    <section class="offer" id="offer" aria-labelledby="offer-title">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Offer</div>
+          <h2 id="offer-title">把使用權，留給你授權的人。</h2>
+          <p class="lead">
+            適合校園、辦公室、健身房，以及每一個重視個人物品界線的共享空間。
+          </p>
+        </div>
+
+        <article class="offer-card reveal">
+          <div class="offer-card-top">
+            <div>
+              <h3>FingerSafe指紋防護水壺</h3>
+              <p class="muted">深藍色水壺搭配智慧辨識瓶蓋</p>
+            </div>
+            <div class="offer-price" aria-label="新台幣一千五百元">
+              NT$1,500
+            </div>
+          </div>
+
+          <ul class="offer-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>指紋辨識智慧瓶蓋</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>未授權開啟鎖定</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>紅／綠LED辨識提示</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>適用校園、辦公室及健身房</span>
+            </li>
+          </ul>
+
+          <a
+            class="button button-primary"
+            href="#final-cta"
+            aria-label="前往FingerSafe預購資訊"
+          >
+            立即預購FingerSafe
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <p class="concept-note">
+            本頁為產品概念展示，不包含付款或購物車功能。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. Final CTA -->
+    <section class="final-cta" id="final-cta" aria-labelledby="final-title">
+      <div class="container final-grid">
+        <div class="final-copy reveal">
+          <div class="eyebrow">FingerSafe</div>
+          <h2 id="final-title">
+            你無法預測每一次惡意，但能為自己的飲水安全，多上一道鎖。
+          </h2>
+
+          <p class="slogan">離開視線，安全不離線。</p>
+
+          <div class="final-price" aria-label="建議售價新台幣一千五百元">
+            NT$1,500
+          </div>
+
+          <a
+            class="button button-primary"
+            href="#offer"
+            aria-label="立即查看FingerSafe預購方案"
+          >
+            立即預購FingerSafe
+          </a>
+        </div>
+
+        <div class="final-product reveal">
+          <img
+            src="fingerpoint.png"
+            alt="FingerSafe深藍色指紋防護水壺，黑色智慧瓶蓋上具有綠色指紋辨識燈環"
+            width="432"
+            height="720"
+            loading="lazy"
+          >
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand" href="#hook" aria-label="返回FingerSafe頁首">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>FingerSafe</span>
+      </a>
+
+      <p>
+        本頁為產品概念展示。FingerSafe提供的是未授權開啟限制，不代表能杜絕所有飲水安全或犯罪風險。
+      </p>
+    </div>
+  </footer>
+
+  <!-- Mobile fixed CTA -->
+  <aside class="mobile-cta" aria-label="快速預購">
+    <div class="mobile-cta-inner">
+      <div class="mobile-price">
+        <small>FingerSafe</small>
+        <strong>NT$1,500</strong>
+      </div>
+      <a class="button button-primary" href="#offer">立即預購</a>
+    </div>
+  </aside>
+
+  <script>
+    (() => {
+      "use strict";
+
+      document.documentElement.classList.add("js");
+
+      const menuButton = document.querySelector(".menu-toggle");
+      const navigation = document.querySelector(".site-nav");
+      const navigationLinks = navigation
+        ? navigation.querySelectorAll("a[href^='#']")
+        : [];
+
+      const closeMenu = () => {
+        if (!menuButton || !navigation) return;
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "開啟導覽選單");
+        navigation.classList.remove("is-open");
+        document.body.classList.remove("menu-open");
+      };
+
+      if (menuButton && navigation) {
+        menuButton.addEventListener("click", () => {
+          const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+          menuButton.setAttribute("aria-expanded", String(!isOpen));
+          menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "開啟導覽選單" : "關閉導覽選單"
+          );
+          navigation.classList.toggle("is-open", !isOpen);
+          document.body.classList.toggle("menu-open", !isOpen);
+        });
+
+        navigationLinks.forEach((link) => {
+          link.addEventListener("click", closeMenu);
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeMenu();
+            menuButton.focus();
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          if (window.innerWidth >= 896) closeMenu();
+        });
+      }
+
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      const revealElements = document.querySelectorAll(".reveal");
+
+      if (reducedMotion || !("IntersectionObserver" in window)) {
+        revealElements.forEach((element) => {
+          element.classList.add("is-visible");
+        });
+      } else {
+        const revealObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            root: null,
+            rootMargin: "0px 0px -8% 0px",
+            threshold: 0.12
+          }
+        );
+
+        revealElements.forEach((element) => {
+          revealObserver.observe(element);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
