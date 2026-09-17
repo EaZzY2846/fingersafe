@@ -800,7 +800,7 @@
     }
 
     /* =========================
-       Final CTA and footer
+       Final CTA
     ========================== */
     .final-cta {
       overflow: hidden;
@@ -855,6 +855,182 @@
       object-fit: contain;
       filter: drop-shadow(0 1.5rem 2rem rgba(0, 0, 0, 0.4));
     }
+
+    /* =========================
+       Order form
+    ========================== */
+    .order-section {
+      background:
+        radial-gradient(circle at 50% 15%, rgba(37, 232, 121, 0.08), transparent 28rem),
+        var(--color-navy);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .order-layout {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .order-summary,
+    .order-form-card {
+      padding: clamp(1.4rem, 5vw, 2.4rem);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .order-summary {
+      align-self: start;
+      border-color: rgba(37, 232, 121, 0.2);
+    }
+
+    .order-product-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding-block: 1.25rem;
+      border-block: 1px solid var(--color-border);
+    }
+
+    .order-product-row strong:last-child {
+      color: var(--color-green);
+      white-space: nowrap;
+    }
+
+    .order-summary-list {
+      display: grid;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0;
+      color: var(--color-muted);
+      list-style: none;
+    }
+
+    .order-summary-list li {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .order-summary-list li::before {
+      color: var(--color-green);
+      content: "✓";
+      font-weight: 900;
+    }
+
+    .order-form,
+    .form-grid,
+    .form-field {
+      display: grid;
+    }
+
+    .order-form,
+    .form-grid {
+      gap: 1.15rem;
+    }
+
+    .form-field {
+      gap: 0.45rem;
+    }
+
+    .form-field label,
+    .checkbox-label {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .required-mark {
+      color: var(--color-green);
+    }
+
+    .form-control {
+      width: 100%;
+      min-height: 3.25rem;
+      padding: 0.8rem 0.95rem;
+      color: var(--color-text);
+      background: rgba(3, 8, 18, 0.72);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    textarea.form-control {
+      min-height: 7rem;
+      resize: vertical;
+    }
+
+    .form-control::placeholder { color: #748395; }
+    .form-control:hover { border-color: rgba(170, 183, 198, 0.42); }
+    .form-control:focus {
+      border-color: var(--color-green);
+      box-shadow: 0 0 0 3px rgba(37, 232, 121, 0.13);
+    }
+
+    .field-hint,
+    .privacy-note {
+      margin: 0;
+      color: var(--color-muted);
+      font-size: 0.78rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      color: var(--color-muted);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .checkbox-label input {
+      width: 1.15rem;
+      height: 1.15rem;
+      flex: 0 0 auto;
+      margin-top: 0.3rem;
+      accent-color: var(--color-green);
+    }
+
+    .order-form .button { width: 100%; }
+    .order-form .button[disabled] {
+      cursor: wait;
+      opacity: 0.62;
+      transform: none;
+    }
+
+    .form-status {
+      display: none;
+      margin: 0;
+      padding: 0.8rem 1rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+    }
+
+    .form-status.is-visible { display: block; }
+    .form-status.success {
+      color: #a9f7cb;
+      background: rgba(37, 232, 121, 0.08);
+      border-color: rgba(37, 232, 121, 0.24);
+    }
+
+    .form-status.error {
+      color: #ffc1c5;
+      background: rgba(255, 90, 101, 0.08);
+      border-color: rgba(255, 90, 101, 0.24);
+    }
+
+    .honeypot {
+      position: absolute !important;
+      left: -9999px !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+    }
+
+    /* Footer */
 
     .site-footer {
       padding: 2rem 0 6.5rem;
@@ -961,6 +1137,12 @@
         align-items: start;
         justify-content: space-between;
       }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .form-field-full { grid-column: 1 / -1; }
     }
 
     @media (min-width: 56rem) {
@@ -979,6 +1161,11 @@
 
       .mechanism-grid {
         grid-template-columns: repeat(4, 1fr);
+      }
+
+      .order-layout {
+        grid-template-columns: minmax(18rem, 0.7fr) minmax(0, 1.3fr);
+        align-items: start;
       }
 
       .mobile-cta {
@@ -1396,8 +1583,8 @@
 
           <a
             class="button button-primary"
-            href="#offer"
-            aria-label="立即查看FingerSafe預購方案"
+            href="#order-form"
+            aria-label="前往FingerSafe預購表單"
           >
             立即預購FingerSafe
           </a>
@@ -1405,12 +1592,82 @@
 
         <div class="final-product reveal">
           <img
-            src="Video Project 5.gif"
+            src="fingerpoint.png"
             alt="FingerSafe深藍色指紋防護水壺，黑色智慧瓶蓋上具有綠色指紋辨識燈環"
             width="432"
             height="720"
             loading="lazy"
           >
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Order Form -->
+    <section class="order-section" id="order-form" aria-labelledby="order-title">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Pre-order</div>
+          <h2 id="order-title">填寫預購資料</h2>
+          <p class="lead">請確認聯絡與收件資訊正確。完成匯款後，填寫匯款帳號後五碼供訂單核對。</p>
+        </div>
+
+        <div class="order-layout">
+          <aside class="order-summary reveal" aria-label="訂單摘要">
+            <span class="concept-label">產品概念預購</span>
+            <h3>訂單摘要</h3>
+            <div class="order-product-row">
+              <strong>FingerSafe指紋防護水壺</strong>
+              <strong>NT$1,500</strong>
+            </div>
+            <ul class="order-summary-list">
+              <li>指紋辨識智慧瓶蓋</li>
+              <li>紅／綠LED辨識提示</li>
+              <li>未授權開啟維持鎖定</li>
+            </ul>
+            <p class="privacy-note" style="margin-top: 1.4rem;">本表單僅蒐集訂單聯絡、收件及匯款核對所需資料，不會要求輸入完整銀行帳號或網路銀行密碼。</p>
+          </aside>
+
+          <div class="order-form-card reveal">
+            <form class="order-form" id="fingersafe-order-form" novalidate>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="customer-name">姓名 <span class="required-mark" aria-hidden="true">＊</span></label>
+                  <input class="form-control" id="customer-name" name="name" type="text" autocomplete="name" maxlength="50" required>
+                </div>
+                <div class="form-field">
+                  <label for="customer-phone">電話 <span class="required-mark" aria-hidden="true">＊</span></label>
+                  <input class="form-control" id="customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="例如：0912-345-678" required>
+                </div>
+                <div class="form-field">
+                  <label for="customer-email">Email <span class="required-mark" aria-hidden="true">＊</span></label>
+                  <input class="form-control" id="customer-email" name="email" type="email" autocomplete="email" maxlength="100" placeholder="name@example.com" required>
+                </div>
+                <div class="form-field">
+                  <label for="remittance-last-five">匯款帳號後五碼 <span class="required-mark" aria-hidden="true">＊</span></label>
+                  <input class="form-control" id="remittance-last-five" name="lastFive" type="text" inputmode="numeric" autocomplete="off" minlength="5" maxlength="5" pattern="[0-9]{5}" placeholder="請輸入5位數字" required aria-describedby="last-five-hint">
+                  <p class="field-hint" id="last-five-hint">僅填寫匯款帳號末五碼，請勿提供完整帳號或密碼。</p>
+                </div>
+                <div class="form-field form-field-full">
+                  <label for="shipping-address">收件地址 <span class="required-mark" aria-hidden="true">＊</span></label>
+                  <textarea class="form-control" id="shipping-address" name="address" autocomplete="street-address" maxlength="200" placeholder="請填寫郵遞區號及完整收件地址" required></textarea>
+                </div>
+              </div>
+
+              <div class="honeypot" aria-hidden="true">
+                <label for="company-website">公司網站</label>
+                <input id="company-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+
+              <label class="checkbox-label" for="privacy-consent">
+                <input id="privacy-consent" name="privacyConsent" type="checkbox" required>
+                <span>我同意FingerSafe為聯絡、訂單核對及商品寄送目的，蒐集並使用上述資料。</span>
+              </label>
+
+              <button class="button button-primary" id="order-submit" type="submit">送出預購資料</button>
+              <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+              <p class="privacy-note">下單時間將於資料成功送達時自動記錄於Google試算表。</p>
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -1436,7 +1693,7 @@
         <small>FingerSafe</small>
         <strong>NT$1,500</strong>
       </div>
-      <a class="button button-primary" href="#offer">立即預購</a>
+      <a class="button button-primary" href="#order-form">立即預購</a>
     </div>
   </aside>
 
@@ -1451,6 +1708,9 @@
       const navigationLinks = navigation
         ? navigation.querySelectorAll("a[href^='#']")
         : [];
+
+      /* 替換為Google Apps Script部署後取得的網頁應用程式網址。 */
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAplftP8mZ5X233F1ZhIh33srMzkYu-9O9ZqwvtH--cDLAgr0c_ZcUxwpAPqW5Dd5tjg/exec";
 
       const closeMenu = () => {
         if (!menuButton || !navigation) return;
@@ -1485,6 +1745,66 @@
 
         window.addEventListener("resize", () => {
           if (window.innerWidth >= 896) closeMenu();
+        });
+      }
+
+      const orderForm = document.querySelector("#fingersafe-order-form");
+      const submitButton = document.querySelector("#order-submit");
+      const formStatus = document.querySelector("#form-status");
+
+      const showFormStatus = (message, type) => {
+        if (!formStatus) return;
+        formStatus.textContent = message;
+        formStatus.className = `form-status is-visible ${type}`;
+      };
+
+      if (orderForm && submitButton && formStatus) {
+        orderForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          formStatus.className = "form-status";
+          formStatus.textContent = "";
+
+          if (!orderForm.checkValidity()) {
+            orderForm.reportValidity();
+            showFormStatus("請確認所有必填欄位及格式皆正確。", "error");
+            return;
+          }
+
+          if (GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")) {
+            showFormStatus("表單尚未完成Google試算表連線設定，請聯絡網站管理者。", "error");
+            return;
+          }
+
+          const formData = new FormData(orderForm);
+          if (String(formData.get("website") || "").trim()) return;
+
+          const payload = {
+            name: String(formData.get("name") || "").trim(),
+            phone: String(formData.get("phone") || "").trim(),
+            email: String(formData.get("email") || "").trim(),
+            address: String(formData.get("address") || "").trim(),
+            lastFive: String(formData.get("lastFive") || "").trim()
+          };
+
+          submitButton.disabled = true;
+          submitButton.textContent = "資料送出中…";
+
+          try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(payload)
+            });
+
+            orderForm.reset();
+            showFormStatus("預購資料已送出！我們將依你提供的資料進行核對與聯絡。", "success");
+          } catch (error) {
+            showFormStatus("目前無法送出資料，請確認網路連線後再試一次。", "error");
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "送出預購資料";
+          }
         });
       }
 
