@@ -1697,7 +1697,7 @@
     </div>
   </aside>
 
-  <script>
+<script>
     (() => {
       "use strict";
 
@@ -1709,124 +1709,100 @@
         ? navigation.querySelectorAll("a[href^='#']")
         : [];
 
-     /**
- * FingerSafe 預購表單 → 直接送到 Google 表單（自動存入試算表）
- * ------------------------------------------------------------
- * 用途：取代原本 HTML 檔案中 <script> 內的 orderForm 送出邏輯，
- *       不再打 Apps Script 網頁應用程式，而是直接 POST 到
- *       Google 表單的 formResponse 網址。
- *
- * 使用前請先完成：
- *  1. 建立一個 Google 表單，欄位對應：姓名／電話／Email／收件地址／匯款後五碼
- *  2. 用「取得預先填入的連結」找出每個欄位的 entry.xxxxxxx ID
- *  3. 把下面 GOOGLE_FORM_ACTION_URL 及 ENTRY_IDS 換成你自己的值
- */
+      const closeMenu = () => {
+        if (!menuButton || !navigation) return;
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "開啟導覽選單");
+        navigation.classList.remove("is-open");
+        document.body.classList.remove("menu-open");
+      };
 
-// 例：https://docs.google.com/forms/d/e/1FAIpQLSxxxxxxx/formResponse
-const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeZ732IZ3c6zSPvdirmpA83eq9q6dZTs-yt4W4Ic-yLv3fJEA/formResponse";
+      if (menuButton && navigation) {
+        menuButton.addEventListener("click", () => {
+          const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+          menuButton.setAttribute("aria-expanded", String(!isOpen));
+          menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "開啟導覽選單" : "關閉導覽選單"
+          );
+          navigation.classList.toggle("is-open", !isOpen);
+          document.body.classList.toggle("menu-open", !isOpen);
+        });
 
-// 把右邊的 entry.數字 換成你在「取得預先填入的連結」看到的實際值
-const ENTRY_IDS = {
-  name: "entry.441331768",
-  phone: "entry.1245333093",
-  email: "entry.1877248511",
-  lastFive: "entry.2098937649",
-  address: "entry.910854090"
-  
-};
+        navigationLinks.forEach((link) => {
+          link.addEventListener("click", closeMenu);
+        });
 
-(() => {
-  "use strict";
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeMenu();
+            menuButton.focus();
+          }
+        });
 
-  const orderForm = document.querySelector("#fingersafe-order-form");
-  const submitButton = document.querySelector("#order-submit");
-  const formStatus = document.querySelector("#form-status");
+        window.addEventListener("resize", () => {
+          if (window.innerWidth >= 896) closeMenu();
+        });
+      }
 
-  const showFormStatus = (message, type) => {
-    if (!formStatus) return;
-    formStatus.textContent = message;
-    formStatus.className = `form-status is-visible ${type}`;
-  };
+      /* ==== FingerSafe 預購表單 → 直接送到 Google 表單 ==== */
 
-  if (!orderForm || !submitButton || !formStatus) return;
+      // 例：https://docs.google.com/forms/d/e/1FAIpQLSxxxxxxx/formResponse
+      const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeZ732IZ3c6zSPvdirmpA83eq9q6dZTs-yt4W4Ic-yLv3fJEA/formResponse";
 
-  orderForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    formStatus.className = "form-status";
-    formStatus.textContent = "";
+      // entry.數字 對應到 Google 表單各欄位
+      const ENTRY_IDS = {
+        name: "entry.441331768",
+        phone: "entry.1245333093",
+        email: "entry.1877248511",
+        lastFive: "entry.2098937649",
+        address: "entry.910854090"
+      };
 
-    if (!orderForm.checkValidity()) {
-      orderForm.reportValidity();
-      showFormStatus("請確認所有必填欄位及格式皆正確。", "error");
-      return;
-    }
+      const orderForm = document.querySelector("#fingersafe-order-form");
+      const submitButton = document.querySelector("#order-submit");
+      const formStatus = document.querySelector("#form-status");
 
-    if (GOOGLE_FORM_ACTION_URL.includes("請貼上")) {
-      showFormStatus("表單尚未完成Google表單連線設定，請聯絡網站管理者。", "error");
-      return;
-    }
+      const showFormStatus = (message, type) => {
+        if (!formStatus) return;
+        formStatus.textContent = message;
+        formStatus.className = `form-status is-visible ${type}`;
+      };
 
-    const formData = new FormData(orderForm);
+      if (orderForm && submitButton && formStatus) {
+        orderForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          formStatus.className = "form-status";
+          formStatus.textContent = "";
 
-    // 蜜罐欄位：有值代表機器人，靜默不送出
-    if (String(formData.get("website") || "").trim()) return;
-
-    const payload = new URLSearchParams();
-    payload.set(ENTRY_IDS.name, String(formData.get("name") || "").trim());
-    payload.set(ENTRY_IDS.phone, String(formData.get("phone") || "").trim());
-    payload.set(ENTRY_IDS.email, String(formData.get("email") || "").trim());
-    payload.set(ENTRY_IDS.address, String(formData.get("address") || "").trim());
-    payload.set(ENTRY_IDS.lastFive, String(formData.get("lastFive") || "").trim());
-
-    submitButton.disabled = true;
-    submitButton.textContent = "資料送出中…";
-
-    try {
-      // Google 表單不會回傳可讀取的 CORS 回應，
-      // no-cors 模式下只要沒有丟出例外，就視為送出成功。
-      await fetch(GOOGLE_FORM_ACTION_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: payload.toString()
-      });
-
-      orderForm.reset();
-      showFormStatus("預購資料已送出！我們將依你提供的資料進行核對與聯絡。", "success");
-    } catch (error) {
-      showFormStatus("目前無法送出資料，請確認網路連線後再試一次。", "error");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "送出預購資料";
-    }
-  });
-})();
-
-          if (GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")) {
-            showFormStatus("表單尚未完成Google試算表連線設定，請聯絡網站管理者。", "error");
+          if (!orderForm.checkValidity()) {
+            orderForm.reportValidity();
+            showFormStatus("請確認所有必填欄位及格式皆正確。", "error");
             return;
           }
 
           const formData = new FormData(orderForm);
+
+          // 蜜罐欄位：有值代表機器人，靜默不送出
           if (String(formData.get("website") || "").trim()) return;
 
-          const payload = {
-            name: String(formData.get("name") || "").trim(),
-            phone: String(formData.get("phone") || "").trim(),
-            email: String(formData.get("email") || "").trim(),
-            address: String(formData.get("address") || "").trim(),
-            lastFive: String(formData.get("lastFive") || "").trim()
-          };
+          const payload = new URLSearchParams();
+          payload.set(ENTRY_IDS.name, String(formData.get("name") || "").trim());
+          payload.set(ENTRY_IDS.phone, String(formData.get("phone") || "").trim());
+          payload.set(ENTRY_IDS.email, String(formData.get("email") || "").trim());
+          payload.set(ENTRY_IDS.address, String(formData.get("address") || "").trim());
+          payload.set(ENTRY_IDS.lastFive, String(formData.get("lastFive") || "").trim());
 
           submitButton.disabled = true;
           submitButton.textContent = "資料送出中…";
 
           try {
-            await fetch(GOOGLE_SCRIPT_URL, {
+            // no-cors 模式下讀不到回應，只要沒有丟出例外就視為送出成功
+            await fetch(GOOGLE_FORM_ACTION_URL, {
               method: "POST",
               mode: "no-cors",
-              headers: { "Content-Type": "text/plain;charset=utf-8" },
-              body: JSON.stringify(payload)
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: payload.toString()
             });
 
             orderForm.reset();
@@ -1839,6 +1815,8 @@ const ENTRY_IDS = {
           }
         });
       }
+
+      /* ==== 進場動畫 ==== */
 
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
